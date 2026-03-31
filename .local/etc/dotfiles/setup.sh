@@ -3,9 +3,6 @@
 # Run on a fresh Ubuntu 22.04+ machine.
 set -euo pipefail
 
-REPO_URL="git@github.com:cra/dotfiles-server.git"
-BRANCH="trunk"
-
 echo "==> Installing system packages..."
 sudo apt update
 sudo apt install -y \
@@ -78,22 +75,6 @@ if ! command -v just &>/dev/null; then
     echo "==> Installing just..."
     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 fi
-
-# --- Deploy dotfiles via bare git repo ---
-echo "==> Setting up dotfiles..."
-if [ ! -d "$HOME/.dotfiles" ]; then
-    git clone --bare "$REPO_URL" "$HOME/.dotfiles"
-fi
-
-alias D='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-D config status.showUntrackedFiles no
-D checkout "$BRANCH" 2>/dev/null || {
-    # Back up conflicting files
-    echo "==> Backing up conflicting files to ~/.dotfiles-backup..."
-    mkdir -p "$HOME/.dotfiles-backup"
-    D checkout "$BRANCH" 2>&1 | grep -E '^\s' | xargs -I{} mv "$HOME/{}" "$HOME/.dotfiles-backup/{}"
-    D checkout "$BRANCH"
-}
 
 # Ensure dirs exist for configs
 mkdir -p ~/.config/helix

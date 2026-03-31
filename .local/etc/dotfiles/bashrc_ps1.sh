@@ -9,6 +9,8 @@
 #   yellow   - nord yellow
 #   teal     - nord teal
 #   white    - plain white (safe for any terminal)
+#
+# Set PS1_PREFIX to label the machine (defaults to hostname -s):
 
 __nord_ps1() {
     local last_exit=$?
@@ -37,6 +39,10 @@ __nord_ps1() {
     esac
 
     local ps=""
+
+    # Machine prefix (dim)
+    local prefix="${PS1_PREFIX:-$(hostname -s)}"
+    ps+="${dim}${prefix}${reset} "
 
     # Timestamp (accent color, shows when command finished)
     ps+="${accent}\t${reset} "
