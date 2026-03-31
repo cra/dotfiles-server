@@ -25,10 +25,9 @@ if ! command -v hx &>/dev/null; then
     HX_VERSION=$(curl -sL https://api.github.com/repos/helix-editor/helix/releases/latest | grep tag_name | cut -d'"' -f4)
     curl -sL "https://github.com/helix-editor/helix/releases/download/${HX_VERSION}/helix-${HX_VERSION}-x86_64-linux.tar.xz" | tar -xJ -C /tmp
     sudo mv "/tmp/helix-${HX_VERSION}-x86_64-linux/hx" /usr/local/bin/
-    sudo mkdir -p /usr/local/lib/helix
-    sudo mv "/tmp/helix-${HX_VERSION}-x86_64-linux/runtime" /usr/local/lib/helix/
+    mkdir -p ~/.config/helix
+    mv "/tmp/helix-${HX_VERSION}-x86_64-linux/runtime" ~/.config/helix/
     rm -rf "/tmp/helix-${HX_VERSION}-x86_64-linux"
-    export HELIX_RUNTIME=/usr/local/lib/helix/runtime
 fi
 
 # Go (from go.dev if not present)
@@ -50,12 +49,13 @@ if ! command -v uv &>/dev/null; then
     echo "==> Installing uv..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
+UV="$HOME/.local/bin/uv"
 
 # Python LSP
 echo "==> Installing Python LSP tools..."
-uv tool install python-lsp-server
-uv tool install pyright
-uv tool install ruff
+$UV tool install python-lsp-server
+$UV tool install pyright
+$UV tool install ruff
 
 # kubectl
 if ! command -v kubectl &>/dev/null; then
