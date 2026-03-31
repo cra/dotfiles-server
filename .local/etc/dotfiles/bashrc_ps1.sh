@@ -1,10 +1,14 @@
 # === Nord PS1 (multiline, for use with tmux) ===
-# Paste into ~/.bashrc
 #
-# Shows: [exit code if non-zero] [virtualenv] workdir git-branch
-# Second line: prompt symbol
-#
-# No user@host — tmux status bar owns that.
+# Set PS1_ACCENT before sourcing to pick a machine color:
+#   frost    - light blue (default)
+#   aurora   - green
+#   orange   - warm orange
+#   purple   - soft purple
+#   red      - nord red
+#   yellow   - nord yellow
+#   teal     - nord teal
+#   white    - plain white (safe for any terminal)
 
 __nord_ps1() {
     local last_exit=$?
@@ -18,10 +22,24 @@ __nord_ps1() {
     local green='\[\e[38;2;163;190;140m\]'    # nord14
     local dim='\[\e[38;2;76;86;106m\]'        # nord3
 
+    # Machine accent color for timestamp (set PS1_ACCENT to pick)
+    local accent
+    case "${PS1_ACCENT:-frost}" in
+        frost)  accent='\[\e[38;2;136;192;208m\]' ;;  # nord8
+        aurora) accent='\[\e[38;2;163;190;140m\]' ;;  # nord14
+        orange) accent='\[\e[38;2;208;135;112m\]' ;;  # nord12
+        purple) accent='\[\e[38;2;180;142;173m\]' ;;  # nord15
+        red)    accent='\[\e[38;2;191;97;106m\]'  ;;  # nord11
+        yellow) accent='\[\e[38;2;235;203;139m\]' ;;  # nord13
+        teal)   accent='\[\e[38;2;143;188;187m\]' ;;  # nord7
+        white)  accent='\[\e[37m\]'               ;;  # basic white
+        *)      accent='\[\e[38;2;136;192;208m\]' ;;  # fallback: frost
+    esac
+
     local ps=""
 
-    # Timestamp (dim, shows when command finished)
-    ps+="${dim}\t${reset} "
+    # Timestamp (accent color, shows when command finished)
+    ps+="${accent}\t${reset} "
 
     # Exit code (red, only on failure)
     if [ $last_exit -ne 0 ]; then
