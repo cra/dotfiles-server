@@ -41,9 +41,17 @@ go install golang.org/x/tools/gopls@latest
 go install golang.org/x/tools/cmd/goimports@latest
 go install github.com/go-delve/delve/cmd/dlv@latest
 
+# uv (Python package manager)
+if ! command -v uv &>/dev/null; then
+    echo "==> Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
 # Python LSP
 echo "==> Installing Python LSP tools..."
-pip install --user python-lsp-server pyright ruff
+uv tool install python-lsp-server
+uv tool install pyright
+uv tool install ruff
 
 # kubectl
 if ! command -v kubectl &>/dev/null; then
@@ -52,6 +60,13 @@ if ! command -v kubectl &>/dev/null; then
     echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
     sudo apt update
     sudo apt install -y kubectl
+fi
+
+# Docker
+if ! command -v docker &>/dev/null; then
+    echo "==> Installing Docker..."
+    curl -fsSL https://get.docker.com | sh
+    sudo usermod -aG docker "$USER"
 fi
 
 # just (command runner)
@@ -82,10 +97,12 @@ mkdir -p ~/.config/helix
 echo ""
 echo "==> Done! Add the following to your ~/.bashrc if not already there:"
 echo ""
+echo "  source ~/.local/etc/dotfiles/bashrc_tmux.sh         # first!"
 echo "  PS1_ACCENT=\"orange\"  # frost|aurora|orange|purple|red|yellow|teal|white"
 echo "  source ~/.local/etc/dotfiles/bashrc_path.sh"
 echo "  source ~/.local/etc/dotfiles/bashrc_dotfiles.sh"
 echo "  source ~/.local/etc/dotfiles/bashrc_interactive.sh"
+echo "  source ~/.local/etc/dotfiles/bashrc_git.sh"
 echo "  source ~/.local/etc/dotfiles/bashrc_ps1.sh"
 echo ""
 echo "Then restart your shell and verify: hx --health go"

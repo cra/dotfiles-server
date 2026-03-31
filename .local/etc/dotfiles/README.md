@@ -6,11 +6,12 @@ Server/dev machine dotfiles managed via bare git repo.
 
 - `.tmux.conf` — tmux config (nord theme, top status bar)
 - `.config/helix/` — helix editor config + language servers
-- `.local/etc/dotfiles/bashrc_ps1.sh` — nord PS1 prompt (set `PS1_ACCENT` per machine)
+- `.local/etc/dotfiles/bashrc_tmux.sh` — auto-attach tmux on SSH (session = hostname)
 - `.local/etc/dotfiles/bashrc_path.sh` — Go and dev tool paths
 - `.local/etc/dotfiles/bashrc_dotfiles.sh` — `dot` alias for managing this repo
 - `.local/etc/dotfiles/bashrc_interactive.sh` — fzf, zoxide, just, history
 - `.local/etc/dotfiles/bashrc_git.sh` — git aliases
+- `.local/etc/dotfiles/bashrc_ps1.sh` — nord PS1 prompt (set `PS1_ACCENT` per machine)
 
 ## New machine setup
 
@@ -24,6 +25,7 @@ dot checkout trunk
 bash ~/.local/etc/dotfiles/setup.sh
 
 # 3. Add to ~/.bashrc:
+source ~/.local/etc/dotfiles/bashrc_tmux.sh         # first! replaces shell with tmux
 PS1_ACCENT="orange"  # frost|aurora|orange|purple|red|yellow|teal|white
 source ~/.local/etc/dotfiles/bashrc_path.sh
 source ~/.local/etc/dotfiles/bashrc_dotfiles.sh
