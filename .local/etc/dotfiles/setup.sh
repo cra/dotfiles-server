@@ -19,12 +19,16 @@ sudo apt install -y \
     python3-pip \
     python3-venv
 
-# Helix (PPA)
+# Helix (from GitHub releases)
 if ! command -v hx &>/dev/null; then
     echo "==> Installing helix..."
-    sudo add-apt-repository -y ppa:maveonair/helix-editor
-    sudo apt update
-    sudo apt install -y helix
+    HX_VERSION=$(curl -sL https://api.github.com/repos/helix-editor/helix/releases/latest | grep tag_name | cut -d'"' -f4)
+    curl -sL "https://github.com/helix-editor/helix/releases/download/${HX_VERSION}/helix-${HX_VERSION}-x86_64-linux.tar.xz" | tar -xJ -C /tmp
+    sudo mv "/tmp/helix-${HX_VERSION}-x86_64-linux/hx" /usr/local/bin/
+    sudo mkdir -p /usr/local/lib/helix
+    sudo mv "/tmp/helix-${HX_VERSION}-x86_64-linux/runtime" /usr/local/lib/helix/
+    rm -rf "/tmp/helix-${HX_VERSION}-x86_64-linux"
+    export HELIX_RUNTIME=/usr/local/lib/helix/runtime
 fi
 
 # Go (from go.dev if not present)
@@ -81,14 +85,14 @@ if [ ! -d "$HOME/.dotfiles" ]; then
     git clone --bare "$REPO_URL" "$HOME/.dotfiles"
 fi
 
-alias dot='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-dot config status.showUntrackedFiles no
-dot checkout "$BRANCH" 2>/dev/null || {
+alias D='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+D config status.showUntrackedFiles no
+D checkout "$BRANCH" 2>/dev/null || {
     # Back up conflicting files
     echo "==> Backing up conflicting files to ~/.dotfiles-backup..."
     mkdir -p "$HOME/.dotfiles-backup"
-    dot checkout "$BRANCH" 2>&1 | grep -E '^\s' | xargs -I{} mv "$HOME/{}" "$HOME/.dotfiles-backup/{}"
-    dot checkout "$BRANCH"
+    D checkout "$BRANCH" 2>&1 | grep -E '^\s' | xargs -I{} mv "$HOME/{}" "$HOME/.dotfiles-backup/{}"
+    D checkout "$BRANCH"
 }
 
 # Ensure dirs exist for configs
