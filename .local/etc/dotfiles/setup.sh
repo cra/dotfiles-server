@@ -76,7 +76,7 @@ fi
 # just (command runner)
 if ! command -v just &>/dev/null; then
     echo "==> Installing just..."
-    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 fi
 
 # --- Deploy dotfiles via bare git repo ---
