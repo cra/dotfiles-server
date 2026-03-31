@@ -1,0 +1,45 @@
+theme = "term16_dark"
+
+[editor]
+bufferline = "multiple"
+color-modes = true
+line-number = "relative"
+rulers = [120]
+text-width = 120
+end-of-line-diagnostics = "hint"
+file-picker.git-ignore = false
+
+[editor.inline-diagnostics]
+cursor-line = "error"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.indent-guides]
+character = "▏"
+render = true
+skip-levels = 1
+
+[editor.soft-wrap]
+enable = true
+
+[editor.lsp]
+auto-signature-help = false
+display-messages = true
+
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "file-modification-indicator"]
+right = ["version-control", "diagnostics", "selections", "position", "file-encoding", "file-line-ending", "file-type"]
+separator = "│"
+center = ["file-type"]
+
+[keys.normal]
+C-space = "signature_help"
+# 2025jun25 not sure about these two though
+# X = "extend_line_above"
+# ret = ["move_line_down", "goto_line_start"]
+
+[keys.insert]
+C-space = "signature_help"
