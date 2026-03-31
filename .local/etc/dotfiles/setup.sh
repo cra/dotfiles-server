@@ -12,6 +12,7 @@ sudo apt install -y \
     tmux \
     ripgrep \
     fzf \
+    zoxide \
     git \
     curl \
     build-essential \
@@ -53,6 +54,12 @@ if ! command -v kubectl &>/dev/null; then
     sudo apt install -y kubectl
 fi
 
+# just (command runner)
+if ! command -v just &>/dev/null; then
+    echo "==> Installing just..."
+    curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+fi
+
 # --- Deploy dotfiles via bare git repo ---
 echo "==> Setting up dotfiles..."
 if [ ! -d "$HOME/.dotfiles" ]; then
@@ -78,6 +85,7 @@ echo ""
 echo "  PS1_ACCENT=\"orange\"  # frost|aurora|orange|purple|red|yellow|teal|white"
 echo "  source ~/.local/etc/dotfiles/bashrc_path.sh"
 echo "  source ~/.local/etc/dotfiles/bashrc_dotfiles.sh"
+echo "  source ~/.local/etc/dotfiles/bashrc_interactive.sh"
 echo "  source ~/.local/etc/dotfiles/bashrc_ps1.sh"
 echo ""
 echo "Then restart your shell and verify: hx --health go"
