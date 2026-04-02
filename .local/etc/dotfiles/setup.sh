@@ -76,6 +76,31 @@ if ! command -v just &>/dev/null; then
     curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 fi
 
+# bun
+if ! command -v bun &>/dev/null; then
+    echo "==> Installing bun..."
+    curl -fsSL https://bun.com/install | bash -s "bun-v1.3.3"
+    # Remove the PATH line bun adds to .bashrc (managed in bashrc_path.sh)
+    sed -i '/\.bun\/bin/d' ~/.bashrc
+fi
+
+# gh (GitHub CLI)
+if ! command -v gh &>/dev/null; then
+    echo "==> Installing GitHub CLI..."
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli-stable.list > /dev/null
+    sudo apt update
+    sudo apt install -y gh
+fi
+
+# Claude Code (opt-in via D_CC=YES)
+if [[ "${D_CC:-}" == "YES" ]]; then
+    if ! command -v claude &>/dev/null; then
+        echo "==> Installing Claude Code..."
+        npm install -g @anthropic-ai/claude-code
+    fi
+fi
+
 # Ensure dirs exist for configs
 mkdir -p ~/.config/helix
 
