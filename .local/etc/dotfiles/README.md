@@ -20,6 +20,7 @@ Server/dev machine dotfiles managed via bare git repo.
 git clone --bare git@github.com:cra/dotfiles-server.git ~/.dotfiles
 alias D='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 D checkout trunk
+D config --local status.showUntrackedFiles no
 
 # 2. Install packages
 bash ~/.local/etc/dotfiles/setup.sh
